@@ -1,0 +1,125 @@
+#include <iostream>
+#include <vector>
+#include <pthread.h>
+#include <unistd.h>
+#include <random>
+
+#define NUM_READERS 10
+#define NUM_WRITERS 20
+
+#define READER_TIME 1
+#define WRITER_TIME 2
+
+#define REPEATS_COUNT 3
+
+pthread_mutex_t printMutex;
+
+void print(const std::string &msg) {
+    pthread_mutex_lock(&printMutex);
+    std::cout << msg << std::endl;
+    pthread_mutex_unlock(&printMutex);
+}
+
+size_t readers = 0;
+size_t writers = 0;
+
+pthread_mutex_t mutexR;
+pthread_mutex_t mutexW;
+
+pthread_cond_t readingEnd;
+pthread_cond_t writingEnd;
+
+void *read(void *) {
+    auto pthreadId = pthread_self();
+    print(std::string(" Reader ") + std::to_string(pthreadId) +
+          std::string(" start"));
+
+    pthread_mutex_lock(&mutexR);
+    while (writers != 0) {
+        pthread_cond_wait(&writingEnd, &mutexR);
+    }
+    ++readers;
+    pthread_mutex_unlock(&mutexR);
+
+    print(std::string(" Reader ") + std::to_string(pthreadId) +
+          std::string(" got access to the file"));
+    sleep(READER_TIME);
+    print(std::string(" Reader ") + std::to_string(pthreadId) +
+          std::string(" finish work"));
+
+    pthread_mutex_lock(&mutexR);
+    --readers;
+    if (readers == 0) {
+        pthread_cond_broadcast(&readingEnd);
+    }
+    pthread_mutex_unlock(&mutexR);
+
+    return nullptr;
+}
+
+void *write(void *) {
+    auto pthreadId = pthread_self();
+    print(std::string(" Writer ") + std::to_string(pthreadId) +
+          std::string(" start"));
+
+    pthread_mutex_lock(&mutexW);
+    ++writers;
+    while (readers != 0) {
+        pthread_cond_wait(&readingEnd, &mutexW);
+    }
+
+    print(std::string(" Writer ") + std::to_string(pthreadId) +
+          std::string(" GOT access to the file"));
+    sleep(WRITER_TIME);
+    print(std::string(" Writer ") + std::to_string(pthreadId) +
+          std::string(" FINISH work"));
+
+    --writers;
+    if (writers == 0) {
+        pthread_cond_broadcast(&writingEnd);
+    }
+    pthread_mutex_unlock(&mutexW);
+
+    return nullptr;
+}
+
+int main() {
+    std::vector<pthread_t> threads(NUM_READERS + NUM_WRITERS);
+
+    pthread_mutex_init(&mutexR, nullptr);
+    pthread_mutex_init(&mutexW, nullptr);
+
+    pthread_cond_init(&writingEnd, nullptr);
+    pthread_cond_init(&readingEnd, nullptr);
+
+    std::random_device rd;
+    std::mt19937 mersenne(rd());
+
+    for (size_t repeat = 1; repeat <= REPEATS_COUNT; ++repeat) {
+        std::cout << "Iteration №" << repeat << std::endl;
+        size_t numWriters = 0, numReaders = 0;
+        while (numWriters < NUM_WRITERS || numReaders < NUM_READERS) {
+            if (mersenne() % 2 == 0 && numWriters < NUM_WRITERS) {
+                if (pthread_create(&threads[numWriters + numReaders], nullptr, write, nullptr)) {
+                    std::cout << "Error! Thread cant be created!";
+                    return -1;
+                }
+                ++numWriters;
+            } else if (numReaders < NUM_READERS) {
+                if (pthread_create(&threads[numWriters + numReaders], nullptr, read, nullptr)) {
+                    std::cout << "Error! Thread cant be created!";
+                    return -1;
+                }
+                ++numReaders;
+            }
+        }
+
+        for (size_t thread : threads) {
+            pthread_join(thread, nullptr);
+        }
+
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
