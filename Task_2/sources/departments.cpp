@@ -30,24 +30,28 @@ size_t Department::addEmployee(const std::pair<size_t, Employee> &employee) {
 }
 
 bool Department::deleteEmployee(size_t id, std::pair<size_t, Employee> &employee) {
-    if (!employees.contains(id)) {
+    if (!employees.contains(id) || employeesAmount == 0) {
         return false;
     }
     employee = {id, employees[id]};
     --employeesAmount;
     curTotalSalary -= employees[id].salary;
-    averageSalary = curTotalSalary / employeesAmount;
+    if (employeesAmount != 0) {
+        averageSalary = curTotalSalary / employeesAmount;
+    }
     employees.erase(id);
     return true;
 }
 
 bool Department::deleteEmployee(size_t id) {
-    if (!employees.contains(id)) {
+    if (!employees.contains(id) || employeesAmount == 0) {
         return false;
     }
     --employeesAmount;
     curTotalSalary -= employees[id].salary;
-    averageSalary = curTotalSalary / employeesAmount;
+    if (employeesAmount != 0) {
+        averageSalary = curTotalSalary / employeesAmount;
+    }
     employees.erase(id);
     return true;
 }
@@ -62,14 +66,16 @@ std::string Department::setEmployeeFunction(size_t id, const std::string &inputF
 }
 
 bool Department::setEmployeeSalary(size_t id, int inputSalary, int &oldSalary) {
-    if (!employees.contains(id)) {
+    if (!employees.contains(id) || employeesAmount == 0) {
         return false;
     }
     curTotalSalary -= employees[id].salary;
     curTotalSalary += inputSalary;
     oldSalary = employees[id].salary;
     employees[id].salary = inputSalary;
-    averageSalary = curTotalSalary / employeesAmount;
+    if (employeesAmount != 0) {
+        averageSalary = curTotalSalary / employeesAmount;
+    }
     return true;
 }
 

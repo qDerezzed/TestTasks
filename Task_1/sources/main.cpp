@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <random>
+#include <string>
 
 #define NUM_READERS 10
 #define NUM_WRITERS 20
@@ -29,6 +30,10 @@ pthread_mutex_t mutexW;
 pthread_cond_t readingEnd;
 pthread_cond_t writingEnd;
 
+pthread_barrier_t barrier;
+
+std::string str = "@";
+
 void *read(void *) {
     auto pthreadId = pthread_self();
     print(std::string(" Reader ") + std::to_string(pthreadId) +
@@ -42,8 +47,9 @@ void *read(void *) {
     pthread_mutex_unlock(&mutexR);
 
     print(std::string(" Reader ") + std::to_string(pthreadId) +
-          std::string(" got access to the file"));
+          std::string(" got access"));
     sleep(READER_TIME);
+    print(std::string("read: ") + str);
     print(std::string(" Reader ") + std::to_string(pthreadId) +
           std::string(" finish work"));
 
@@ -53,6 +59,8 @@ void *read(void *) {
         pthread_cond_broadcast(&readingEnd);
     }
     pthread_mutex_unlock(&mutexR);
+
+    pthread_barrier_wait(&barrier);
 
     return nullptr;
 }
@@ -69,8 +77,10 @@ void *write(void *) {
     }
 
     print(std::string(" Writer ") + std::to_string(pthreadId) +
-          std::string(" GOT access to the file"));
+          std::string(" GOT access"));
     sleep(WRITER_TIME);
+    str += "@";
+    print(std::string("write: ") + str);
     print(std::string(" Writer ") + std::to_string(pthreadId) +
           std::string(" FINISH work"));
 
@@ -79,6 +89,8 @@ void *write(void *) {
         pthread_cond_broadcast(&writingEnd);
     }
     pthread_mutex_unlock(&mutexW);
+
+    pthread_barrier_wait(&barrier);
 
     return nullptr;
 }
@@ -91,6 +103,8 @@ int main() {
 
     pthread_cond_init(&writingEnd, nullptr);
     pthread_cond_init(&readingEnd, nullptr);
+
+    pthread_barrier_init(&barrier, nullptr, NUM_READERS + NUM_WRITERS + 1);
 
     std::random_device rd;
     std::mt19937 mersenne(rd());
@@ -114,12 +128,19 @@ int main() {
             }
         }
 
+        pthread_barrier_wait(&barrier);
         for (size_t thread : threads) {
             pthread_join(thread, nullptr);
         }
 
         std::cout << std::endl;
+        str = "@";
     }
+    pthread_barrier_destroy(&barrier);
+    pthread_cond_destroy(&writingEnd);
+    pthread_cond_destroy(&readingEnd);
+    pthread_mutex_destroy(&mutexR);
+    pthread_mutex_destroy(&mutexW);
 
     return 0;
 }

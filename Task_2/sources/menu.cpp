@@ -90,50 +90,70 @@ void Menu::editEmployee() {
     std::size_t numAction = getVariant(1, 5);
     switch (numAction) {
         case 1: {
-            std::cout << "Enter new surname: ";
-            std::string newSurname;
-            std::getline(std::cin, newSurname);
-            for (auto &[departamentName, departament] : *departments) {
-                if (departament.setEmployeeSurName(id, newSurname)) {
-                    break;
-                }
-            }
+            editEmployeeSurname(id);
             break;
         }
         case 2: {
-            std::cout << "Enter new name: ";
-            std::string newName;
-            std::getline(std::cin, newName);
-            for (auto &[departamentName, departament] : *departments) {
-                if (departament.setEmployeeName(id, newName)) {
-                    break;
-                }
-            }
+            editEmployeeName(id);
             break;
         }
         case 3: {
-            std::cout << "Enter new middle name: ";
-            std::string newMiddleName;
-            std::getline(std::cin, newMiddleName);
-            for (auto &[departamentName, departament] : *departments) {
-                if (departament.setEmployeeMiddleName(id, newMiddleName)) {
-                    break;
-                }
-            }
+            editEmployeeMiddleName(id);
             break;
         }
         case 4: {
-            std::cout << "Enter new function: ";
-            std::string newFunction;
-            std::getline(std::cin, newFunction);
-            inv.EditEmployeeFunction(id, newFunction);
+            editEmployeeFunction(id);
             break;
         }
         case 5: {
-            std::cout << std::endl << "Enter new salary as a integer number: ";
-            size_t salary = getIntNumber();
-            inv.EditEmployeeSalary(id, salary);
+            editEmployeeSalary(id);
             break;
         }
     }
+}
+
+void Menu::editEmployeeSurname(size_t id) {
+    std::cout << "Enter new surname: ";
+    std::string newSurname;
+    std::getline(std::cin, newSurname);
+    for (auto &[departamentName, departament] : *departments) {
+        if (departament.setEmployeeSurName(id, newSurname)) {
+            break;
+        }
+    }
+}
+
+void Menu::editEmployeeName(size_t id) {
+    std::cout << "Enter new name: ";
+    std::string newName;
+    std::getline(std::cin, newName);
+    for (auto &[departamentName, departament] : *departments) {
+        if (departament.setEmployeeName(id, newName)) {
+            break;
+        }
+    }
+}
+
+void Menu::editEmployeeMiddleName(size_t id) {
+    std::cout << "Enter new middle name: ";
+    std::string newMiddleName;
+    std::getline(std::cin, newMiddleName);
+    for (auto &[departamentName, departament] : *departments) {
+        if (departament.setEmployeeMiddleName(id, newMiddleName)) {
+            break;
+        }
+    }
+}
+
+void Menu::editEmployeeFunction(size_t id) {
+    std::cout << "Enter new function: ";
+    std::string newFunction;
+    std::getline(std::cin, newFunction);
+    inv.EditEmployeeFunction(id, newFunction);
+}
+
+void Menu::editEmployeeSalary(size_t id) {
+    std::cout << std::endl << "Enter new salary as a integer number: ";
+    size_t salary = getIntNumber();
+    inv.EditEmployeeSalary(id, salary);
 }

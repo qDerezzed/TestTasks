@@ -80,6 +80,16 @@ public:
     void editEmployee();
 
 private:
+    void editEmployeeSurname(size_t id);
+
+    void editEmployeeName(size_t id);
+
+    void editEmployeeMiddleName(size_t id);
+
+    void editEmployeeFunction(size_t id);
+
+    void editEmployeeSalary(size_t id);
+
     std::map<std::string, Department> *departments = nullptr;
 };
 

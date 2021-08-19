@@ -103,7 +103,9 @@ public:
     void Execute() override;
 
     void unExecute() override {
-        departments->at(depName).addEmployee(employee);
+        if (!depName.empty()) {
+            departments->at(depName).addEmployee(employee);
+        }
     }
 };
 
