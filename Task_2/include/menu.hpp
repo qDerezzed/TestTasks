@@ -50,6 +50,19 @@ public:
         return variant;
     }
 
+    static bool getIntNumber(size_t &number) {
+        std::string str;
+        getline(std::cin, str);
+        try {
+            number = std::stoi(str);
+        }
+        catch (...) {
+            std::cout << "error! need to enter a integer number" << std::endl;
+            return false;
+        }
+        return true;
+    }
+
     static size_t getIntNumber() {
         std::string str;
         size_t number = 0;
@@ -89,6 +102,8 @@ private:
     void editEmployeeFunction(size_t id);
 
     void editEmployeeSalary(size_t id);
+
+    static bool backToMenu();
 
     std::map<std::string, Department> *departments = nullptr;
 };
