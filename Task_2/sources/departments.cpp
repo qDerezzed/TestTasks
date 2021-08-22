@@ -34,11 +34,11 @@ bool Department::deleteEmployee(size_t id, std::pair<size_t, Employee> &employee
         return false;
     }
     employee = {id, employees[id]};
-    --employeesAmount;
     curTotalSalary -= employees[id].salary;
     if (employeesAmount != 0) {
         averageSalary = curTotalSalary / employeesAmount;
     }
+    --employeesAmount;
     employees.erase(id);
     return true;
 }
@@ -47,11 +47,11 @@ bool Department::deleteEmployee(size_t id) {
     if (!employees.contains(id) || employeesAmount == 0) {
         return false;
     }
-    --employeesAmount;
     curTotalSalary -= employees[id].salary;
     if (employeesAmount != 0) {
         averageSalary = curTotalSalary / employeesAmount;
     }
+    --employeesAmount;
     employees.erase(id);
     return true;
 }
