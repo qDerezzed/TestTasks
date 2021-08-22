@@ -12,6 +12,8 @@ public:
 
     Parser &operator=(const Parser &) = delete;
 
+    explicit Parser(const std::string &inputFileName) : fileName(inputFileName) {}
+
     ~Parser() = default;
 
     void readInputFileName() {
