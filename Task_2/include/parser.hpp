@@ -8,19 +8,15 @@
 
 class Parser {
 public:
-    Parser() = delete;
+    Parser() = default;
 
     Parser &operator=(const Parser &) = delete;
 
     ~Parser() = default;
 
-    explicit Parser(const std::string &inputFileName) : fileName(inputFileName) {}
-
-    static std::string readInputFileName() {
-        std::cout << "Enter the path to the xml file: " << std::endl;
-        std::string fileName;
+    void readInputFileName() {
+        std::cout << "Enter the path to the xml file: ";
         std::getline(std::cin, fileName);
-        return fileName;
     }
 
     static void printDepartamentsTree(const std::map<std::string, Department> &departments) {

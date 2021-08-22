@@ -7,8 +7,8 @@
 Invoker inv;
 
 int main() {
-    std::string inputFileName = Parser::readInputFileName();
-    Parser parser(inputFileName);
+    Parser parser;
+    parser.readInputFileName();
     std::map<std::string, Department> departments = parser.parse();
     inv.setDepartments(&departments);
 

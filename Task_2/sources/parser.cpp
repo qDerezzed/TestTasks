@@ -31,7 +31,10 @@ std::map<std::string, Department> Parser::parse() {
     std::map<std::string, Department> departments;
 
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(fileName.c_str());
+    while (doc.LoadFile(fileName.c_str())) {
+        std::cout << "File reading error!" << std::endl;
+        readInputFileName();
+    }
 
     for (tinyxml2::XMLElement *department = doc.FirstChildElement("departments")->FirstChildElement("department");
          department;
