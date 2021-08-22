@@ -7,8 +7,11 @@ void Menu::addEmployee() {
     std::string departmentName;
     std::getline(std::cin, departmentName);
     while (!departments->contains(departmentName)) {
-        std::cout << "error: wrong department name" << std::endl
-                  << "to add employee enter department name: ";
+        std::cout << "error: wrong department name" << std::endl;
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "to add employee enter department name: ";
         std::getline(std::cin, departmentName);
     }
     std::cout << "to add employee enter:" << std::endl << "surname: ";
@@ -44,7 +47,13 @@ void Menu::addDepartament() {
 
 void Menu::deleteEmployee() {
     std::cout << "to delete employee enter id: ";
-    size_t id = getIntNumber();
+    size_t id;
+    while (!getIntNumber(id)) {
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "to delete employee enter id: ";
+    }
     inv.DeleteEmployee(id);
 }
 
@@ -53,8 +62,11 @@ void Menu::deleteDepartment() {
     std::string departmentName;
     std::getline(std::cin, departmentName);
     while (!departments->contains(departmentName)) {
-        std::cout << "error: wrong department name" << std::endl
-                  << "to delete department enter department name: ";
+        std::cout << "error: wrong department name" << std::endl;
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "to delete department enter department name: ";
         std::getline(std::cin, departmentName);
     }
     inv.DeleteDepartment(departmentName);
@@ -65,8 +77,11 @@ void Menu::editDepartment() {
     std::string oldDepartmentName;
     std::getline(std::cin, oldDepartmentName);
     while (!departments->contains(oldDepartmentName)) {
-        std::cout << "error: wrong department name" << std::endl
-                  << "to edit department enter old department name: ";
+        std::cout << "error: wrong department name" << std::endl;
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "to edit department enter old department name: ";
         std::getline(std::cin, oldDepartmentName);
     }
     std::cout << "Enter new department name: ";
@@ -78,7 +93,13 @@ void Menu::editDepartment() {
 
 void Menu::editEmployee() {
     std::cout << "to edit employee enter id: ";
-    size_t id = getIntNumber();
+    size_t id;
+    while (!getIntNumber(id)) {
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "to edit employee enter id: ";
+    }
     std::cout << "What you want edit?" << std::endl
               << "1. surname" << std::endl
               << "2. name" << std::endl
@@ -141,7 +162,20 @@ void Menu::editEmployeeFunction(size_t id) {
 }
 
 void Menu::editEmployeeSalary(size_t id) {
-    std::cout << std::endl << "Enter new salary as a integer number: ";
+    std::cout << "Enter new salary as a integer number: ";
     size_t salary = getIntNumber();
     inv.EditEmployeeSalary(id, salary);
+}
+
+bool Menu::backToMenu() {
+    char exit;
+    do {
+        std::cout << "You want back to menu? [y/n]: ";
+        std::cin >> exit;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (exit == 'Y' || exit == 'y') {
+            return true;
+        }
+    } while (exit != 'N' && exit != 'n');
+    return false;
 }
