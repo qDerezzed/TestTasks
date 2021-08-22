@@ -13,7 +13,7 @@ protected:
 public:
     virtual ~Command() = default;
 
-    virtual void Execute() = 0;
+    virtual bool Execute() = 0;
 
     virtual void unExecute() = 0;
 
@@ -32,8 +32,9 @@ class AddEmployeeCommand : public Command {
 public:
     explicit AddEmployeeCommand(Employee inputEmployee) : employee(std::move(inputEmployee)) {}
 
-    void Execute() override {
+    bool Execute() override {
         id = department->addEmployee(employee);
+        return true;
     }
 
     void unExecute() override {
@@ -46,8 +47,9 @@ class AddDepartmentCommand : public Command {
 public:
     explicit AddDepartmentCommand(std::string inputDepartmentName) : departmentName(std::move(inputDepartmentName)) {}
 
-    void Execute() override {
+    bool Execute() override {
         departments->emplace(departmentName, departmentName);
+        return true;
     }
 
     void unExecute() override {
@@ -63,7 +65,7 @@ public:
     EditEmployeeFunctionCommand(size_t inputId, std::string employeeFunction) : newEmployeeFunction(
             std::move(employeeFunction)), id(inputId) {}
 
-    void Execute() override;
+    bool Execute() override;
 
     void unExecute() override;
 };
@@ -76,7 +78,7 @@ public:
     EditEmployeeSalaryCommand(size_t inputId, int employeeSalary) : newEmployeeSalary(employeeSalary),
                                                                     id(inputId) {}
 
-    void Execute() override;
+    bool Execute() override;
 
     void unExecute() override;
 };
@@ -88,7 +90,7 @@ public:
     explicit EditDepartmentCommand(std::string inputDepartmentName) : newDepartmentName(
             std::move(inputDepartmentName)) {}
 
-    void Execute() override;
+    bool Execute() override;
 
     void unExecute() override;
 };
@@ -100,7 +102,7 @@ class DeleteEmployeeCommand : public Command {
 public:
     explicit DeleteEmployeeCommand(size_t inputId) : id(inputId) {}
 
-    void Execute() override;
+    bool Execute() override;
 
     void unExecute() override {
         if (!depName.empty()) {
@@ -115,9 +117,10 @@ class DeleteDepartmentCommand : public Command {
 public:
     explicit DeleteDepartmentCommand(std::string inputDepName) : depName(std::move(inputDepName)) {}
 
-    void Execute() override {
+    bool Execute() override {
         deleteDepartment = departments->at(depName);
         departments->erase(depName);
+        return true;
     }
 
     void unExecute() override {

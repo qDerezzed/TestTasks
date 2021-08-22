@@ -1,12 +1,13 @@
 #include "invoker.hpp"
 
-void EditEmployeeFunctionCommand::Execute() {
+bool EditEmployeeFunctionCommand::Execute() {
     for (auto &[depName, dep] : *departments) {
         oldEmployeeFunction = dep.setEmployeeFunction(id, newEmployeeFunction);
         if (!oldEmployeeFunction.empty()) {
-            break;
+            return true;
         }
     }
+    return false;
 }
 
 void EditEmployeeFunctionCommand::unExecute() {
@@ -17,12 +18,13 @@ void EditEmployeeFunctionCommand::unExecute() {
     }
 }
 
-void EditEmployeeSalaryCommand::Execute() {
+bool EditEmployeeSalaryCommand::Execute() {
     for (auto &[departamentName, departament] : *departments) {
         if (departament.setEmployeeSalary(id, newEmployeeSalary, oldEmployeeSalary)) {
-            break;
+            return true;
         }
     }
+    return false;
 }
 
 void EditEmployeeSalaryCommand::unExecute() {
@@ -33,12 +35,13 @@ void EditEmployeeSalaryCommand::unExecute() {
     }
 }
 
-void EditDepartmentCommand::Execute() {
+bool EditDepartmentCommand::Execute() {
     oldDepartmentName = department->getDepartmentName();
     department->setDepartmentName(newDepartmentName);
     auto nh = departments->extract(oldDepartmentName);
     nh.key() = newDepartmentName;
     departments->insert(move(nh));
+    return true;
 }
 
 void EditDepartmentCommand::unExecute() {
@@ -48,13 +51,15 @@ void EditDepartmentCommand::unExecute() {
     departments->insert(move(nh));
 }
 
-void DeleteEmployeeCommand::Execute() {
+bool DeleteEmployeeCommand::Execute() {
     for (auto &[departamentName, departament] : *departments) {
         if (departament.deleteEmployee(id, employee)) {
             depName = departamentName;
-            break;
+            return true;
         }
     }
+    std::cout << "error: wrong id" << std::endl;
+    return false;
 }
 
 void Invoker::AddEmployee(const Employee &employee) {
@@ -74,15 +79,17 @@ void Invoker::AddDepartment(const std::string &inputDepartmentName) {
 void Invoker::EditEmployeeFunction(size_t inputId, const std::string &employeeFunction) {
     command = new EditEmployeeFunctionCommand(inputId, employeeFunction);
     command->setDepartments(departments);
-    command->Execute();
-    DoneCommands.push(command);
+    if (command->Execute()) {
+        DoneCommands.push(command);
+    }
 }
 
 void Invoker::EditEmployeeSalary(size_t inputId, int salary) {
     command = new EditEmployeeSalaryCommand(inputId, salary);
     command->setDepartments(departments);
-    command->Execute();
-    DoneCommands.push(command);
+    if (command->Execute()) {
+        DoneCommands.push(command);
+    }
 }
 
 void Invoker::EditDepartment(const std::string &inputDepName) {
@@ -97,8 +104,9 @@ void Invoker::DeleteEmployee(size_t id) {
     command = new DeleteEmployeeCommand(id);
     command->setDepartment(department);
     command->setDepartments(departments);
-    command->Execute();
-    DoneCommands.push(command);
+    if (command->Execute()) {
+        DoneCommands.push(command);
+    }
 }
 
 void Invoker::DeleteDepartment(const std::string &depName) {
