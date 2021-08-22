@@ -32,9 +32,7 @@ pthread_cond_t writingEnd;
 
 pthread_barrier_t barrier;
 
-std::string str = "@";
-
-void *read(void *) {
+void *read(void *str) {
     auto pthreadId = pthread_self();
     print(std::string(" Reader ") + std::to_string(pthreadId) +
           std::string(" start"));
@@ -49,7 +47,7 @@ void *read(void *) {
     print(std::string(" Reader ") + std::to_string(pthreadId) +
           std::string(" got access"));
     sleep(READER_TIME);
-    print(std::string("read: ") + str);
+    print(std::string("read: ") + *static_cast<std::string *>(str));
     print(std::string(" Reader ") + std::to_string(pthreadId) +
           std::string(" finish work"));
 
@@ -65,7 +63,7 @@ void *read(void *) {
     return nullptr;
 }
 
-void *write(void *) {
+void *write(void *args) {
     auto pthreadId = pthread_self();
     print(std::string(" Writer ") + std::to_string(pthreadId) +
           std::string(" start"));
@@ -79,8 +77,9 @@ void *write(void *) {
     print(std::string(" Writer ") + std::to_string(pthreadId) +
           std::string(" GOT access"));
     sleep(WRITER_TIME);
-    str += "@";
-    print(std::string("write: ") + str);
+    auto str = static_cast<std::string *>(args);
+    *str += "@";
+    print(std::string("write: ") + *str);
     print(std::string(" Writer ") + std::to_string(pthreadId) +
           std::string(" FINISH work"));
 
@@ -108,19 +107,20 @@ int main() {
 
     std::random_device rd;
     std::mt19937 mersenne(rd());
-
+    auto *str = new std::string;
     for (size_t repeat = 1; repeat <= REPEATS_COUNT; ++repeat) {
         std::cout << "Iteration №" << repeat << std::endl;
         size_t numWriters = 0, numReaders = 0;
+        *str = "@";
         while (numWriters < NUM_WRITERS || numReaders < NUM_READERS) {
             if (mersenne() % 2 == 0 && numWriters < NUM_WRITERS) {
-                if (pthread_create(&threads[numWriters + numReaders], nullptr, write, nullptr)) {
+                if (pthread_create(&threads[numWriters + numReaders], nullptr, write, static_cast<void *>(str))) {
                     std::cout << "Error! Thread cant be created!";
                     return -1;
                 }
                 ++numWriters;
             } else if (numReaders < NUM_READERS) {
-                if (pthread_create(&threads[numWriters + numReaders], nullptr, read, nullptr)) {
+                if (pthread_create(&threads[numWriters + numReaders], nullptr, read, static_cast<void *>(str))) {
                     std::cout << "Error! Thread cant be created!";
                     return -1;
                 }
@@ -134,8 +134,8 @@ int main() {
         }
 
         std::cout << std::endl;
-        str = "@";
     }
+    delete str;
     pthread_barrier_destroy(&barrier);
     pthread_cond_destroy(&writingEnd);
     pthread_cond_destroy(&readingEnd);
