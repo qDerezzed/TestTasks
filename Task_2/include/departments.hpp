@@ -37,29 +37,11 @@ public:
         departmentName = inputName;
     }
 
-    bool setEmployeeName(size_t id, const std::string &inputName) {
-        if (!employees.contains(id)) {
-            return false;
-        }
-        employees[id].name = inputName;
-        return true;
-    }
+    std::string setEmployeeName(size_t id, const std::string &inputName);
 
-    bool setEmployeeMiddleName(size_t id, const std::string &inputName) {
-        if (!employees.contains(id)) {
-            return false;
-        }
-        employees[id].middleName = inputName;
-        return true;
-    }
+    std::string setEmployeeMiddleName(size_t id, const std::string &inputName);
 
-    bool setEmployeeSurName(size_t id, const std::string &inputName) {
-        if (!employees.contains(id)) {
-            return false;
-        }
-        employees[id].surname = inputName;
-        return true;
-    }
+    std::string setEmployeeSurName(size_t id, const std::string &inputName);
 
     std::string setEmployeeFunction(size_t id, const std::string &inputFunction);
 

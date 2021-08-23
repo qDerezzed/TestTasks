@@ -34,11 +34,12 @@ bool Department::deleteEmployee(size_t id, std::pair<size_t, Employee> &employee
         return false;
     }
     employee = {id, employees[id]};
-    curTotalSalary -= employees[id].salary;
+    --employeesAmount;
     if (employeesAmount != 0) {
         averageSalary = curTotalSalary / employeesAmount;
+    } else {
+        averageSalary = 0;
     }
-    --employeesAmount;
     employees.erase(id);
     return true;
 }
@@ -48,12 +49,41 @@ bool Department::deleteEmployee(size_t id) {
         return false;
     }
     curTotalSalary -= employees[id].salary;
+    --employeesAmount;
     if (employeesAmount != 0) {
         averageSalary = curTotalSalary / employeesAmount;
+    } else {
+        averageSalary = 0;
     }
-    --employeesAmount;
     employees.erase(id);
     return true;
+}
+
+std::string Department::setEmployeeName(size_t id, const std::string &inputName) {
+    if (!employees.contains(id)) {
+        return {};
+    }
+    std::string oldName = std::move(employees[id].name);
+    employees[id].name = inputName;
+    return oldName;
+}
+
+std::string Department::setEmployeeMiddleName(size_t id, const std::string &inputName) {
+    if (!employees.contains(id)) {
+        return {};
+    }
+    std::string oldMiddleName = std::move(employees[id].middleName);
+    employees[id].middleName = inputName;
+    return oldMiddleName;
+}
+
+std::string Department::setEmployeeSurName(size_t id, const std::string &inputName) {
+    if (!employees.contains(id)) {
+        return {};
+    }
+    std::string oldSurname = std::move(employees[id].surname);
+    employees[id].surname = inputName;
+    return oldSurname;
 }
 
 std::string Department::setEmployeeFunction(size_t id, const std::string &inputFunction) {

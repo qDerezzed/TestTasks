@@ -116,33 +116,21 @@ void Menu::editEmployeeSurname(size_t id) {
     std::cout << "Enter new surname: ";
     std::string newSurname;
     std::getline(std::cin, newSurname);
-    for (auto &[departamentName, departament] : *departments) {
-        if (departament.setEmployeeSurName(id, newSurname)) {
-            break;
-        }
-    }
+    inv.EditEmployeeSurname(id, newSurname);
 }
 
 void Menu::editEmployeeName(size_t id) {
     std::cout << "Enter new name: ";
     std::string newName;
     std::getline(std::cin, newName);
-    for (auto &[departamentName, departament] : *departments) {
-        if (departament.setEmployeeName(id, newName)) {
-            break;
-        }
-    }
+    inv.EditEmployeeName(id, newName);
 }
 
 void Menu::editEmployeeMiddleName(size_t id) {
     std::cout << "Enter new middle name: ";
     std::string newMiddleName;
     std::getline(std::cin, newMiddleName);
-    for (auto &[departamentName, departament] : *departments) {
-        if (departament.setEmployeeMiddleName(id, newMiddleName)) {
-            break;
-        }
-    }
+    inv.EditEmployeeMiddleName(id, newMiddleName);
 }
 
 void Menu::editEmployeeFunction(size_t id) {
