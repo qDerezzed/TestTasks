@@ -1,5 +1,62 @@
 #include "invoker.hpp"
 
+bool EditEmployeeSurNameCommand::Execute() {
+    for (auto &[depName, dep] : *departments) {
+        oldEmployeeSurName = dep.setEmployeeSurName(id, newEmployeeSurName);
+        if (!oldEmployeeSurName.empty()) {
+            return true;
+        }
+    }
+    std::cout << "error: wrong id" << std::endl;
+    return false;
+}
+
+void EditEmployeeSurNameCommand::unExecute() {
+    for (auto &[depName, dep] : *departments) {
+        if (!dep.setEmployeeSurName(id, oldEmployeeSurName).empty()) {
+            break;
+        }
+    }
+}
+
+bool EditEmployeeNameCommand::Execute() {
+    for (auto &[depName, dep] : *departments) {
+        oldEmployeeName = dep.setEmployeeName(id, newEmployeeName);
+        if (!oldEmployeeName.empty()) {
+            return true;
+        }
+    }
+    std::cout << "error: wrong id" << std::endl;
+    return false;
+}
+
+void EditEmployeeNameCommand::unExecute() {
+    for (auto &[depName, dep] : *departments) {
+        if (!dep.setEmployeeName(id, oldEmployeeName).empty()) {
+            break;
+        }
+    }
+}
+
+bool EditEmployeeMiddleNameCommand::Execute() {
+    for (auto &[depName, dep] : *departments) {
+        oldEmployeeMiddleName = dep.setEmployeeMiddleName(id, newEmployeeMiddleName);
+        if (!oldEmployeeMiddleName.empty()) {
+            return true;
+        }
+    }
+    std::cout << "error: wrong id" << std::endl;
+    return false;
+}
+
+void EditEmployeeMiddleNameCommand::unExecute() {
+    for (auto &[depName, dep] : *departments) {
+        if (!dep.setEmployeeMiddleName(id, oldEmployeeMiddleName).empty()) {
+            break;
+        }
+    }
+}
+
 bool EditEmployeeFunctionCommand::Execute() {
     for (auto &[depName, dep] : *departments) {
         oldEmployeeFunction = dep.setEmployeeFunction(id, newEmployeeFunction);
@@ -7,8 +64,10 @@ bool EditEmployeeFunctionCommand::Execute() {
             return true;
         }
     }
+    std::cout << "error: wrong id" << std::endl;
     return false;
 }
+
 
 void EditEmployeeFunctionCommand::unExecute() {
     for (auto &[depName, dep] : *departments) {
@@ -24,6 +83,7 @@ bool EditEmployeeSalaryCommand::Execute() {
             return true;
         }
     }
+    std::cout << "error: wrong id" << std::endl;
     return false;
 }
 
@@ -74,6 +134,30 @@ void Invoker::AddDepartment(const std::string &inputDepartmentName) {
     command->setDepartments(departments);
     command->Execute();
     DoneCommands.push(command);
+}
+
+void Invoker::EditEmployeeSurname(size_t inputId, const std::string &employeeSurname) {
+    command = new EditEmployeeSurNameCommand(inputId, employeeSurname);
+    command->setDepartments(departments);
+    if (command->Execute()) {
+        DoneCommands.push(command);
+    }
+}
+
+void Invoker::EditEmployeeName(size_t inputId, const std::string &employeeName) {
+    command = new EditEmployeeNameCommand(inputId, employeeName);
+    command->setDepartments(departments);
+    if (command->Execute()) {
+        DoneCommands.push(command);
+    }
+}
+
+void Invoker::EditEmployeeMiddleName(size_t inputId, const std::string &employeeMiddleName) {
+    command = new EditEmployeeNameCommand(inputId, employeeMiddleName);
+    command->setDepartments(departments);
+    if (command->Execute()) {
+        DoneCommands.push(command);
+    }
 }
 
 void Invoker::EditEmployeeFunction(size_t inputId, const std::string &employeeFunction) {

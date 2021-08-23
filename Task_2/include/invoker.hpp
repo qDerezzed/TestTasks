@@ -57,6 +57,45 @@ public:
     }
 };
 
+class EditEmployeeSurNameCommand : public Command {
+    std::string newEmployeeSurName;
+    std::string oldEmployeeSurName;
+    size_t id{};
+public:
+    EditEmployeeSurNameCommand(size_t inputId, std::string employeeSurName) : newEmployeeSurName(
+            std::move(employeeSurName)), id(inputId) {}
+
+    bool Execute() override;
+
+    void unExecute() override;
+};
+
+class EditEmployeeNameCommand : public Command {
+    std::string newEmployeeName;
+    std::string oldEmployeeName;
+    size_t id{};
+public:
+    EditEmployeeNameCommand(size_t inputId, std::string employeeName) : newEmployeeName(
+            std::move(employeeName)), id(inputId) {}
+
+    bool Execute() override;
+
+    void unExecute() override;
+};
+
+class EditEmployeeMiddleNameCommand : public Command {
+    std::string newEmployeeMiddleName;
+    std::string oldEmployeeMiddleName;
+    size_t id{};
+public:
+    EditEmployeeMiddleNameCommand(size_t inputId, std::string employeeMiddleName) : newEmployeeMiddleName(
+            std::move(employeeMiddleName)), id(inputId) {}
+
+    bool Execute() override;
+
+    void unExecute() override;
+};
+
 class EditEmployeeFunctionCommand : public Command {
     std::string newEmployeeFunction;
     std::string oldEmployeeFunction;
@@ -146,6 +185,12 @@ public:
     void AddEmployee(const Employee &employee);
 
     void AddDepartment(const std::string &inputDepartmentName);
+
+    void EditEmployeeSurname(size_t inputId, const std::string &employeeSurname);
+
+    void EditEmployeeMiddleName(size_t inputId, const std::string &employeeMiddleName);
+
+    void EditEmployeeName(size_t inputId, const std::string &employeeName);
 
     void EditEmployeeFunction(size_t inputId, const std::string &employeeFunction);
 
