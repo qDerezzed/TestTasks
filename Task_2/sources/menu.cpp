@@ -48,7 +48,7 @@ void Menu::addDepartament() {
 void Menu::deleteEmployee() {
     std::cout << "to delete employee enter id: ";
     size_t id;
-    while (!getIntNumber(id)) {
+    while (!getValidId(id)) {
         if (backToMenu()) {
             return;
         }
@@ -94,7 +94,7 @@ void Menu::editDepartment() {
 void Menu::editEmployee() {
     std::cout << "to edit employee enter id: ";
     size_t id;
-    while (!getIntNumber(id)) {
+    while (!getValidId(id)) {
         if (backToMenu()) {
             return;
         }

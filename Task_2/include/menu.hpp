@@ -50,14 +50,18 @@ public:
         return variant;
     }
 
-    static bool getIntNumber(size_t &number) {
+    bool getValidId(size_t &id) const {
         std::string str;
         getline(std::cin, str);
         try {
-            number = std::stoi(str);
+            id = std::stoi(str);
         }
         catch (...) {
             std::cout << "error! need to enter a integer number" << std::endl;
+            return false;
+        }
+        if (!containsId(id)) {
+            std::cout << "error: wrong id" << std::endl;
             return false;
         }
         return true;
@@ -91,6 +95,15 @@ public:
     void editDepartment();
 
     void editEmployee();
+
+    bool containsId(size_t id) const {
+        for (const auto &department : *departments) {
+            if (department.second.getEmployees().contains(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 private:
     void editEmployeeSurname(size_t id);
