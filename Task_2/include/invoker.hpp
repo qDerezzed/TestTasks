@@ -169,10 +169,33 @@ public:
 
 class Invoker {
     std::stack<Command *> DoneCommands;
+    std::stack<Command *> UndoCommands;
     Department *department = nullptr;
     std::map<std::string, Department> *departments = nullptr;
     Command *command = nullptr;
+
+    void addToDoneCommands(Command *inputCommand) {
+        DoneCommands.push(inputCommand);
+        while (!UndoCommands.empty()) {
+            delete UndoCommands.top();
+            UndoCommands.pop();
+        }
+    }
+
 public:
+
+    Invoker() = default;
+
+    ~Invoker() {
+        while (!DoneCommands.empty()) {
+            delete DoneCommands.top();
+            DoneCommands.pop();
+        }
+        while (!UndoCommands.empty()) {
+            delete UndoCommands.top();
+            UndoCommands.pop();
+        }
+    }
 
     void setDepartment(Department *_department) {
         department = _department;
@@ -203,6 +226,8 @@ public:
     void DeleteDepartment(const std::string &depName);
 
     void Undo();
+
+    void Redo();
 };
 
 #endif //AVSOFT_TASK_INVOKER_HPP

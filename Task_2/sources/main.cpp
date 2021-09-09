@@ -17,7 +17,7 @@ int main() {
     size_t numMenu;
     do {
         Menu::printMenu();
-        numMenu = Menu::getVariant(1, 9);
+        numMenu = Menu::getVariant(1, 10);
         switch (numMenu) {
             case 1:
                 Parser::printDepartamentsTree(departments);
@@ -44,6 +44,9 @@ int main() {
                 inv.Undo();
                 break;
             case 9:
+                inv.Redo();
+                break;
+            case 10:
                 std::cout << "You want save changes to a XML file?" << std::endl << "1. Yes" << std::endl << "2. No"
                           << std::endl << "selected action: " << std::endl
                           << "$ ";
@@ -54,7 +57,7 @@ int main() {
             default:
                 return 1;
         }
-    } while (numMenu != 9);
+    } while (numMenu != 10);
 
     return 0;
 }

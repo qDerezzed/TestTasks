@@ -126,21 +126,21 @@ void Invoker::AddEmployee(const Employee &employee) {
     command = new AddEmployeeCommand(employee);
     command->setDepartment(department);
     command->Execute();
-    DoneCommands.push(command);
+    addToDoneCommands(command);
 }
 
 void Invoker::AddDepartment(const std::string &inputDepartmentName) {
     command = new AddDepartmentCommand(inputDepartmentName);
     command->setDepartments(departments);
     command->Execute();
-    DoneCommands.push(command);
+    addToDoneCommands(command);
 }
 
 void Invoker::EditEmployeeSurname(size_t inputId, const std::string &employeeSurname) {
     command = new EditEmployeeSurNameCommand(inputId, employeeSurname);
     command->setDepartments(departments);
     if (command->Execute()) {
-        DoneCommands.push(command);
+        addToDoneCommands(command);
     }
 }
 
@@ -148,7 +148,7 @@ void Invoker::EditEmployeeName(size_t inputId, const std::string &employeeName) 
     command = new EditEmployeeNameCommand(inputId, employeeName);
     command->setDepartments(departments);
     if (command->Execute()) {
-        DoneCommands.push(command);
+        addToDoneCommands(command);
     }
 }
 
@@ -156,7 +156,7 @@ void Invoker::EditEmployeeMiddleName(size_t inputId, const std::string &employee
     command = new EditEmployeeMiddleNameCommand(inputId, employeeMiddleName);
     command->setDepartments(departments);
     if (command->Execute()) {
-        DoneCommands.push(command);
+        addToDoneCommands(command);
     }
 }
 
@@ -164,7 +164,7 @@ void Invoker::EditEmployeeFunction(size_t inputId, const std::string &employeeFu
     command = new EditEmployeeFunctionCommand(inputId, employeeFunction);
     command->setDepartments(departments);
     if (command->Execute()) {
-        DoneCommands.push(command);
+        addToDoneCommands(command);
     }
 }
 
@@ -172,7 +172,7 @@ void Invoker::EditEmployeeSalary(size_t inputId, int salary) {
     command = new EditEmployeeSalaryCommand(inputId, salary);
     command->setDepartments(departments);
     if (command->Execute()) {
-        DoneCommands.push(command);
+        addToDoneCommands(command);
     }
 }
 
@@ -181,7 +181,7 @@ void Invoker::EditDepartment(const std::string &inputDepName) {
     command->setDepartment(department);
     command->setDepartments(departments);
     command->Execute();
-    DoneCommands.push(command);
+    addToDoneCommands(command);
 }
 
 void Invoker::DeleteEmployee(size_t id) {
@@ -189,7 +189,7 @@ void Invoker::DeleteEmployee(size_t id) {
     command->setDepartment(department);
     command->setDepartments(departments);
     if (command->Execute()) {
-        DoneCommands.push(command);
+        addToDoneCommands(command);
     }
 }
 
@@ -197,7 +197,7 @@ void Invoker::DeleteDepartment(const std::string &depName) {
     command = new DeleteDepartmentCommand(depName);
     command->setDepartments(departments);
     command->Execute();
-    DoneCommands.push(command);
+    addToDoneCommands(command);
 }
 
 void Invoker::Undo() {
@@ -207,7 +207,19 @@ void Invoker::Undo() {
         command = DoneCommands.top();
         DoneCommands.pop();
         command->unExecute();
+        UndoCommands.push(command);
         std::cout << "Undo is succes" << std::endl;
-        delete command;
+    }
+}
+
+void Invoker::Redo() {
+    if (UndoCommands.empty()) {
+        std::cout << "There is nothing to redo!" << std::endl;
+    } else {
+        command = UndoCommands.top();
+        UndoCommands.pop();
+        command->Execute();
+        DoneCommands.push(command);
+        std::cout << "Redo is succes" << std::endl;
     }
 }

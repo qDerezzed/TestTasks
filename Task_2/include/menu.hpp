@@ -26,7 +26,8 @@ public:
                   << "6. delete employee" << std::endl
                   << "7. delete department" << std::endl
                   << "8. undo action" << std::endl
-                  << "9. exit" << std::endl
+                  << "9. redo action" << std::endl
+                  << "10. exit" << std::endl
                   << "selected action: " << std::endl
                   << "$ ";
     }
