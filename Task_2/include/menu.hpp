@@ -53,8 +53,12 @@ public:
     bool getValidId(size_t &id) const {
         std::string str;
         getline(std::cin, str);
+        if (str[0] == '-') {
+            std::cout << "error! need to enter a positive integer number: ";
+            return false;
+        }
         try {
-            id = std::stoi(str);
+            id = std::stoull(str);
         }
         catch (...) {
             std::cout << "error! need to enter a integer number" << std::endl;
@@ -73,8 +77,12 @@ public:
         bool flag = false;
         do {
             getline(std::cin, str);
+            if (str[0] == '-') {
+                std::cout << "error! need to enter a positive integer number: ";
+                continue;
+            }
             try {
-                number = std::stoi(str);
+                number = std::stoull(str);
                 flag = true;
             }
             catch (...) {
