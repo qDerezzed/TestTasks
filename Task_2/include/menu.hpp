@@ -71,6 +71,17 @@ public:
         return true;
     }
 
+    static bool getValidName(std::string &name) {
+        getline(std::cin, name);
+        for (char i : name) {
+            if (!isalpha(i)) {
+                std::cout << "error! a string can contain only letters" << std::endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
     static size_t getIntNumber() {
         std::string str;
         size_t number = 0;

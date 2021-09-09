@@ -136,21 +136,36 @@ void Menu::editEmployee() {
 void Menu::editEmployeeSurname(size_t id) {
     std::cout << "Enter new surname: ";
     std::string newSurname;
-    std::getline(std::cin, newSurname);
+    while (!getValidName(newSurname)) {
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "Enter new surname: ";
+    }
     inv.EditEmployeeSurname(id, newSurname);
 }
 
 void Menu::editEmployeeName(size_t id) {
     std::cout << "Enter new name: ";
     std::string newName;
-    std::getline(std::cin, newName);
+    while (!getValidName(newName)) {
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "Enter new name: ";
+    }
     inv.EditEmployeeName(id, newName);
 }
 
 void Menu::editEmployeeMiddleName(size_t id) {
     std::cout << "Enter new middle name: ";
     std::string newMiddleName;
-    std::getline(std::cin, newMiddleName);
+    while (!getValidName(newMiddleName)) {
+        if (backToMenu()) {
+            return;
+        }
+        std::cout << "Enter new middle name: ";
+    }
     inv.EditEmployeeMiddleName(id, newMiddleName);
 }
 
