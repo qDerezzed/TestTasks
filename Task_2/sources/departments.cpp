@@ -34,6 +34,7 @@ bool Department::deleteEmployee(size_t id, std::pair<size_t, Employee> &employee
         return false;
     }
     employee = {id, employees[id]};
+    curTotalSalary -= employees[id].salary;
     --employeesAmount;
     if (employeesAmount != 0) {
         averageSalary = curTotalSalary / employeesAmount;

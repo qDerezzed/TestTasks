@@ -153,7 +153,7 @@ void Invoker::EditEmployeeName(size_t inputId, const std::string &employeeName) 
 }
 
 void Invoker::EditEmployeeMiddleName(size_t inputId, const std::string &employeeMiddleName) {
-    command = new EditEmployeeNameCommand(inputId, employeeMiddleName);
+    command = new EditEmployeeMiddleNameCommand(inputId, employeeMiddleName);
     command->setDepartments(departments);
     if (command->Execute()) {
         DoneCommands.push(command);
