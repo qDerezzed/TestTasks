@@ -30,9 +30,13 @@ public:
         }
     }
 
-    void saveChanges(const std::map<std::string, Department> &departments) const;
+    static void saveChanges(const std::string &fileName, const std::map<std::string, Department> &departments);
 
     std::map<std::string, Department> parse();
+
+    std::string getFileName() {
+        return fileName;
+    }
 
 private:
     std::string fileName;

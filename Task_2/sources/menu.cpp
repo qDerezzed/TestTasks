@@ -194,3 +194,19 @@ bool Menu::backToMenu() {
     } while (exit != 'N' && exit != 'n');
     return false;
 }
+
+std::string Menu::getValidFilePath() {
+    std::cout << "enter the file path: ";
+    std::string filePath;
+    std::getline(std::cin, filePath);
+    while (!std::filesystem::exists(filePath)) {
+        std::cout << "error! invalid file path" << std::endl;
+        if (backToMenu()) {
+            return {};
+        }
+        std::cout << "enter the file path: ";
+        std::getline(std::cin, filePath);
+    }
+    return filePath;
+}
+

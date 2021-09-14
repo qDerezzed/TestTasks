@@ -17,7 +17,7 @@ int main() {
     size_t numMenu;
     do {
         Menu::printMenu();
-        numMenu = Menu::getVariant(1, 10);
+        numMenu = Menu::getVariant(1, 11);
         switch (numMenu) {
             case 1:
                 Parser::printDepartamentsTree(departments);
@@ -46,18 +46,28 @@ int main() {
             case 9:
                 inv.Redo();
                 break;
-            case 10:
-                std::cout << "You want save changes to a XML file?" << std::endl << "1. Yes" << std::endl << "2. No"
+            case 10: {
+                std::string fileName = Menu::getValidFilePath();
+                if (fileName.empty()) {
+                    break;
+                }
+                Parser::saveChanges(fileName, departments);
+                std::cout << "the changes were successfully saved in the XML file" << std::endl;
+                break;
+            }
+            case 11:
+                std::cout << "Do you want to save the changes in the original XML file?" << std::endl << "1. Yes"
+                          << std::endl << "2. No"
                           << std::endl << "selected action: " << std::endl
                           << "$ ";
                 if (Menu::getVariant(1, 2) == 1) {
-                    parser.saveChanges(departments);
+                    Parser::saveChanges(parser.getFileName(), departments);
                 }
                 return 0;
             default:
                 return 1;
         }
-    } while (numMenu != 10);
+    } while (numMenu != 11);
 
     return 0;
 }

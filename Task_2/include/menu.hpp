@@ -2,9 +2,11 @@
 #define AVSOFT_TASK_MENU_HPP
 
 #include <iostream>
+#include <filesystem>
 
 #include "departments.hpp"
 #include <invoker.hpp>
+
 
 class Menu {
 public:
@@ -27,7 +29,8 @@ public:
                   << "7. delete department" << std::endl
                   << "8. undo action" << std::endl
                   << "9. redo action" << std::endl
-                  << "10. exit" << std::endl
+                  << "10. save changes to a XML file" << std::endl
+                  << "11. exit" << std::endl
                   << "selected action: " << std::endl
                   << "$ ";
     }
@@ -124,6 +127,8 @@ public:
         }
         return false;
     }
+
+    static std::string getValidFilePath();
 
 private:
     void editEmployeeSurname(size_t id);
